@@ -1,47 +1,45 @@
-package paper1_GA;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 /**
  * 
- * ²âÊÔÀà
+ * æµ‹è¯•ç±»
  *
  */
 public class Test {
 	public static void main(String[] args) {
-		//Ä£ÄâÊı¾İ¿â
+		//æ¨¡æ‹Ÿæ•°æ®åº“
 		DB db=new DB();
-		//ÊÔ¾íÊÔÌâ
+		//è¯•å·è¯•é¢˜
 		Paper paper=new Paper();
 		paper.setId(1);
-		//ÉèÖÃÊÔ¾íµÄ×Ü·Ö
+		//è®¾ç½®è¯•å·çš„æ€»åˆ†
 		paper.setTotalScore(100);
 		paper.setDifficulty(0.72);
-		//ÉèÖÃÊÔ¾íµÄÖªÊ¶µã
+		//è®¾ç½®è¯•å·çš„çŸ¥è¯†ç‚¹
 		List<Integer> points=new ArrayList<Integer>();
 		for(int i=1;i<=81;i+=2){
 			points.add(i);
 		}
-		//ÉèÖÃÊÔ¾í¸÷¸öÌâĞÍµÄÊıÁ¿
+		//è®¾ç½®è¯•å·å„ä¸ªé¢˜å‹çš„æ•°é‡
 		int[] eachTypeCount=new int[]{20,15,15,6,2};
 		paper.setPoints(points);
 		paper.setEachTypeCount(eachTypeCount);
 		int count=1;
-		//ÉèÖÃÊÊÓ¦¶ÈÆÚÍûÖµ
+		//è®¾ç½®é€‚åº”åº¦æœŸæœ›å€¼
 		double expand=0.90;
-		//ÉèÖÃµü´ú´ÎÊı
+		//è®¾ç½®è¿­ä»£æ¬¡æ•°
 		int runCount=100;
-		//²úÉú³õÊ¼ÈºÌå
-		List<Unit> unitList=MainFunction.CSZQ(10, paper, db.getProblemDB());
-		System.out.println("------------ÒÅ´«Ëã·¨×é¾íÏµÍ³--------------");
-		System.out.println("³õÊ¼ÖÖÈº:");
+		//äº§ç”Ÿåˆå§‹ç¾¤ä½“
+		List<Population> unitList=MainFunction.CSZQ(10, paper, db.getProblemDB());
+		System.out.println("------------é—ä¼ ç®—æ³•ç»„å·ç³»ç»Ÿ--------------");
+		System.out.println("åˆå§‹ç§ç¾¤:");
 		showUnit(unitList.get(count));
-		System.out.println("----------------µü´ú¿ªÊ¼--------------------");
+		System.out.println("----------------è¿­ä»£å¼€å§‹--------------------");
 		while(!isEnd(unitList,expand)){
-			System.out.println("ÔÚµÚ"+(++count)+"´úÎ´µÃµ½½á¹û");
+			System.out.println("åœ¨ç¬¬"+(++count)+"ä»£æœªå¾—åˆ°ç»“æœ");
 			if(count>=runCount){
-				System.out.println("¼ÆËã"+runCount+"´úÈÔÎ´µÃµ½½á¹û£¬ÇëÖØĞÂÉèÖÃÌõ¼ş");
+				System.out.println("è®¡ç®—"+runCount+"ä»£ä»æœªå¾—åˆ°ç»“æœï¼Œè¯·é‡æ–°è®¾ç½®æ¡ä»¶");
 				break;
 			}
 			unitList=MainFunction.select(unitList,10);
@@ -52,18 +50,18 @@ public class Test {
 			unitList=MainFunction.change(unitList, db.getProblemDB(), paper);
 		}
 		if(count<runCount){
-			System.out.println("ÔÚµÚ"+(++count)+"´úµÃµ½½á¹û");
-			System.out.println("ÆÚÍûÊÔ¾íÄÑ¶È"+paper.getDifficulty());
+			System.out.println("åœ¨ç¬¬"+(++count)+"ä»£å¾—åˆ°ç»“æœ");
+			System.out.println("æœŸæœ›è¯•å·éš¾åº¦"+paper.getDifficulty());
 			showResult(unitList,expand);
 		}
 	}
 	/**
-	 * ÊÇ·ñµ½´ïÄ¿±ê
+	 * æ˜¯å¦åˆ°è¾¾ç›®æ ‡
 	 * @param unitList
 	 * @param endcondition
 	 * @return
 	 */
-	public static boolean isEnd(List<Unit> unitList,double endcondition){
+	public static boolean isEnd(List<Population> unitList,double endcondition){
 		if(unitList.size()>0){
 			for(int i=0;i<unitList.size();i++){
 				if(unitList.get(i).getAdaptationDegree()>=endcondition){
@@ -74,26 +72,26 @@ public class Test {
 		return false;
 	}
 	/**
-	 * ÏÔÊ¾½á¹û
+	 * æ˜¾ç¤ºç»“æœ
 	 * @param unitList
 	 * @param expand
 	 */
-	public static void showResult(List<Unit> unitList,double expand){
-		Collections.sort(unitList,new Unit());
-		for(Unit unit:unitList){
+	public static void showResult(List<Population> unitList,double expand){
+		Collections.sort(unitList,new Population());
+		for(Population unit:unitList){
 			if(unit.getAdaptationDegree()>=expand){
-				System.out.println("µÚ"+unit.getId()+"Ì×");
-				System.out.println("ÌâÄ¿ÊıÁ¿                                   ÖªÊ¶µã·Ö²¼                                    ÄÑ¶ÈÏµÊı                                 ÊÊÓ¦¶È");
+				System.out.println("ç¬¬"+unit.getId()+"å¥—");
+				System.out.println("é¢˜ç›®æ•°é‡                                   çŸ¥è¯†ç‚¹åˆ†å¸ƒ                                    éš¾åº¦ç³»æ•°                                 é€‚åº”åº¦");
 				System.out.println(unit.getProblemCount()+"           "+unit.getKpCoverage()+"           "+unit.getDifficuty()+"          "+unit.getAdaptationDegree());
 			}
 		}
 	}
 	/**
-	 * ÏÔÊ¾ÖÖÈº¸öÌåµÄÌâÄ¿±àºÅ
+	 * æ˜¾ç¤ºç§ç¾¤ä¸ªä½“çš„é¢˜ç›®ç¼–å·
 	 * 
 	 */
-	public static void showUnit(Unit u){
-		System.out.println("±àºÅ                                  ÖªÊ¶µã·Ö²¼                                 ÄÑ¶ÈÏµÊı");
+	public static void showUnit(Population u){
+		System.out.println("ç¼–å·                                  çŸ¥è¯†ç‚¹åˆ†å¸ƒ                                 éš¾åº¦ç³»æ•°");
 		System.out.println(u.getId()+"          "+u.getKpCoverage()+"          "+u.getDifficuty(u.getProblemList()));
 		for(int i=0;i<u.getProblemList().size();i++){
 			System.out.print(u.getProblemList().get(i).getId()+"  ");

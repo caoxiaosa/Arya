@@ -1,29 +1,27 @@
-package paper1_GA;
-
 import java.util.List;
 	/**
-	 * ÊÔ¾íÊµÌå
+	 * è¯•å·å®ä½“
 	 *
 	 */
 public class Paper {
 	/**
-     * ÊÔ¾íid
+     * è¯•å·id
     */
 	private int id;
 	/**
-     * ÊÔ¾íµÄÄÑ¶ÈÏµÊı
+     * è¯•å·çš„éš¾åº¦ç³»æ•°
     */
 	private double difficulty;
 	/**
-     * ÊÔ¾í×Ü·Ö
+     * è¯•å·æ€»åˆ†
     */
 	private int totalScore;
 	/**
-     * ÊÔ¾í°üº¬ÖªÊ¶µã
+     * è¯•å·åŒ…å«çŸ¥è¯†ç‚¹
     */
 	private List<Integer> points;
 	/**
-     * ÊÔ¾íÖĞ¸÷ÖÖÌâĞÍµÄÊÔÌâÊıÁ¿
+     * è¯•å·ä¸­å„ç§é¢˜å‹çš„è¯•é¢˜æ•°é‡
     */
 	private int[] eachTypeCount;
 
