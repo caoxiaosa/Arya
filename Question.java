@@ -5,7 +5,7 @@ import java.util.List;
  * 试题实体
  *
  */
-public class Problem {
+public class Question {
 	/**
      * 试题题目的id
     */
@@ -27,7 +27,7 @@ public class Problem {
     */
 	private List<Integer> points;
 	
-	public Problem(){
+	public Question(){
 	    id = 0;
 	    type =0;
 	    score = 0;
@@ -35,7 +35,7 @@ public class Problem {
 	    points = new ArrayList<Integer>();
 	}
 	
-	public Problem(Problem p){
+	public Question(Question p){
 	    this.id = p.id;
 	    this.type =p.type;
 	    this.score = p.score;

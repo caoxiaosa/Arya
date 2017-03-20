@@ -5,7 +5,7 @@ import java.util.List;
  * 种群个体实体类
  *
  */
-public class Unit implements Comparator<Unit>{
+public class Population implements Comparator<Population>{
 	/**
      * 试卷id
     */
@@ -17,7 +17,7 @@ public class Unit implements Comparator<Unit>{
 	/**
      * 试卷题目
     */
-	private List<Problem> problemList;
+	private List<Question> problemList;
 	/**
      * 试卷知识点分布
     */
@@ -38,11 +38,11 @@ public class Unit implements Comparator<Unit>{
 	
     
 	
-	public Unit(){
+	public Population(){
 		id=0;
 		adaptationDegree=0.0;
 		kpCoverage=0.0;
-		problemList=new ArrayList<Problem>();
+		problemList=new ArrayList<Question>();
 	}
 	
 	public int getId() {
@@ -61,11 +61,11 @@ public class Unit implements Comparator<Unit>{
 		this.adaptationDegree = adaptationDegree;
 	}
 	
-	public List<Problem> getProblemList() {
+	public List<Question> getProblemList() {
 		return problemList;
 	}
 	
-	public void setProblemList(List<Problem> problemList) {
+	public void setProblemList(List<Question> problemList) {
 		this.problemList = problemList;
 	}
 	
@@ -77,7 +77,7 @@ public class Unit implements Comparator<Unit>{
 		this.kpCoverage = kpCoverage;
 	}
 	
-	public int getProblemCount(List<Problem> problemList) {
+	public int getProblemCount(List<Question> problemList) {
 		return problemList.size();
 	}
 	
@@ -89,7 +89,7 @@ public class Unit implements Comparator<Unit>{
 		this.problemCount = problkemCount;
 	}
 	
-	public int getSumScore(List<Problem> problemList) {
+	public int getSumScore(List<Question> problemList) {
 		int sum=0;
 		for(int i=0;i<problemList.size();i++){
 			sum+=problemList.get(i).getScore();
@@ -105,7 +105,7 @@ public class Unit implements Comparator<Unit>{
 		this.sumScore += sumScore;
 	}
 	
-	public double getDifficuty(List<Problem> problemList) {
+	public double getDifficuty(List<Question> problemList) {
 		double diff=0.0;
 		for(int i=0;i<problemList.size();i++){
 			diff+=problemList.get(i).getDifficulty()*problemList.get(i).getScore();
@@ -117,7 +117,7 @@ public class Unit implements Comparator<Unit>{
 		return difficuty;
 	}
 	
-	public void setDifficuty(List<Problem> problemList) {
+	public void setDifficuty(List<Question> problemList) {
 		double diff=0.0;
 		for(int i=0;i<problemList.size();i++){
 			diff+=problemList.get(i).getDifficulty()*problemList.get(i).getScore();
@@ -125,7 +125,7 @@ public class Unit implements Comparator<Unit>{
 		this.difficuty=diff/sumScore;
 	}
 	
-	public int compare(Unit o1, Unit o2) {
+	public int compare(Population o1, Population o2) {
 		if(o1.getId()<o2.getId()){
 			return 0;
 		}

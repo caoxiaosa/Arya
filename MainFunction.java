@@ -22,31 +22,31 @@ public class MainFunction {
 	 * @param problemList 题库
 	 * @return
 	 */
-	public static List<Unit> CSZQ(int count,Paper paper,List<Problem> problemList){
-		List<Unit> unitList=new ArrayList<Unit>();
+	public static List<Population> CSZQ(int count,Paper paper,List<Question> problemList){
+		List<Population> unitList=new ArrayList<Population>();
 		//获取各种题型的题数
 		int[] eachTypeCount=paper.getEachTypeCount();
-		Unit unit;
+		Population unit;
 		Random rand=new Random();
 		//为各套试卷加入试题
 		for(int i=0;i<count;i++){
-			unit=new Unit();
+			unit=new Population();
 			unit.setId(i+1);
 			unit.setAdaptationDegree(0.0);
 			//试卷总分约束
 			while(paper.getTotalScore()!=unit.getSumScore()){
 				unit.getProblemList().clear();
-				List<Problem> li=new ArrayList<Problem>();
+				List<Question> li=new ArrayList<Question>();
 				//各题型题目数量的限制
 				for(int j=0;j<eachTypeCount.length;j++){
-					List<Problem> oneTypeProblem=new ArrayList<Problem>();;
-					for(Problem p:problemList){
+					List<Question> oneTypeProblem=new ArrayList<Question>();;
+					for(Question p:problemList){
 						//选择该题型的题目且试题需满足组卷要求
 						if((p.getType()==(j+1))&&isContain(paper,p)){
 							oneTypeProblem.add(p);
 						}
 					}
-						Problem temp=new Problem();
+					Question temp = new Question();
 						
 						//从试题库中选择不重复的试题
 						for(int k=0;k<eachTypeCount[j];k++){
@@ -76,7 +76,7 @@ public class MainFunction {
 	 * @param paper
 	 * @return
 	 */
-	public static List<Unit> getKPCoverage(List<Unit> unitList,Paper paper){
+	public static List<Population> getKPCoverage(List<Population> unitList,Paper paper){
 		List<Integer> kp;
 		for(int i=0;i<unitList.size();i++){
 			kp=new ArrayList<Integer>();
@@ -99,10 +99,13 @@ public class MainFunction {
 	 * @param difficulty
 	 * @return
 	 */
-	public static List<Unit> getAdaptationDegree(List<Unit> unitList,Paper paper,double kpCoverage,double difficulty){
+	public static List<Population> getAdaptationDegree(List<Population> unitList,
+													   Paper paper,double kpCoverage,double difficulty){
 		unitList=getKPCoverage(unitList, paper);
 		for(int i=0;i<unitList.size();i++){
-			unitList.get(i).setAdaptationDegree(1-(1-unitList.get(i).getKpCoverage())*kpCoverage-Math.abs(unitList.get(i).getDifficuty()-paper.getDifficulty())*difficulty);
+			unitList.get(i)
+					.setAdaptationDegree(1 - (1 - unitList.get(i).getKpCoverage()) * kpCoverage
+							- Math.abs(unitList.get(i).getDifficuty() - paper.getDifficulty()) * difficulty);
 		}
 		return unitList;
 	}
@@ -112,8 +115,8 @@ public class MainFunction {
 	 * @param count
 	 * @return
 	 */
-	public static List<Unit> select(List<Unit> unitList,int count){
-		List<Unit> selectUnitList=new ArrayList<Unit>();
+	public static List<Population> select(List<Population> unitList,int count){
+		List<Population> selectUnitList=new ArrayList<Population>();
 		//种群个体适应度的和
 		double allAdaptationDegree=0.0;
 		for(int i=0;i<unitList.size();i++){
@@ -146,15 +149,15 @@ public class MainFunction {
 	 * @param papere
 	 * @return
 	 */
-	public static List<Unit> cross(List<Unit> unitList,int count,Paper paper){
-		List<Unit> crossedUnitList=new ArrayList<Unit>();
+	public static List<Population> cross(List<Population> unitList,int count,Paper paper){
+		List<Population> crossedUnitList=new ArrayList<Population>();
 		Random rand=new Random();
 		while(crossedUnitList.size()!=count){
 			//随机选择两个个体
 			int indexone=rand.nextInt(unitList.size());
 			int indextow=rand.nextInt(unitList.size());
-			Unit unitone;
-			Unit unittow;
+			Population unitone;
+			Population unittow;
 			if(indexone!=indextow){
 				unitone=unitList.get(indexone);
 				unittow=unitList.get(indextow);
@@ -165,14 +168,14 @@ public class MainFunction {
 				double scoretow=unittow.getProblemList().get(crossPosition).getScore()+unittow.getProblemList().get(crossPosition+1).getScore();
 				if(scoreone==scoretow){
 					//两个新个体
-					Unit unitNewOne=new Unit();
+					Population unitNewOne=new Population();
 					unitNewOne.getProblemList().addAll(unitone.getProblemList());
-					Unit unitNewTow=new Unit();
+					Population unitNewTow=new Population();
 					unitNewTow.getProblemList().addAll(unittow.getProblemList());
 					//交换交叉位置后的两道试题
 					for(int i=crossPosition;i<crossPosition+2;i++){
-						unitNewOne.getProblemList().add(i,new Problem(unittow.getProblemList().get(i)));
-						unitNewTow.getProblemList().add(i,new Problem(unitone.getProblemList().get(i)));
+						unitNewOne.getProblemList().add(i,new Question(unittow.getProblemList().get(i)));
+						unitNewTow.getProblemList().add(i,new Question(unitone.getProblemList().get(i)));
 					}
 					unitNewOne.setId(crossedUnitList.size());
 					unitNewTow.setId(unitNewOne.getId()+1);
@@ -199,14 +202,14 @@ public class MainFunction {
 	 * @param paper
 	 * @return
 	 */
-	public static List<Unit> change(List<Unit> unitList,List<Problem> problemList,Paper paper){
+	public static List<Population> change(List<Population> unitList,List<Question> problemList,Paper paper){
 		Random rand=new Random();
 		int index=0;
 		for(int i=0;i<unitList.size();i++){
 			//随机选择一道题
 			index=rand.nextInt(unitList.get(i).getProblemList().size());
-			Problem temp=unitList.get(i).getProblemList().get(index);
-			Problem problem=new Problem();
+			Question temp=unitList.get(i).getProblemList().get(index);
+			Question problem=new Question();
 			//得到这道题的知识点
 			for(int j=0;j<temp.getPoints().size();j++){
 				if(paper.getPoints().contains(temp.getPoints().get(j))){
@@ -214,8 +217,8 @@ public class MainFunction {
 				}
 			}
 			//从数据库中选择包含此题知识点的同种类型、同分数、不同题号的试题
-			List<Problem> smallDB=new ArrayList<Problem>();
-			for(Problem p:problemList){
+			List<Question> smallDB=new ArrayList<Question>();
+			for(Question p:problemList){
 				if(isContain(paper,problem)&&(p.getScore()==temp.getScore())&&(p.getType()==temp.getType())&&(p.getId()!=temp.getId())){
 					smallDB.add(p);
 				}
@@ -239,7 +242,7 @@ public class MainFunction {
 	 * @return 
 	 * @return
 	 */
-	private static boolean isContain(Paper paper,Problem problem){
+	private static boolean isContain(Paper paper,Question problem){
 		for(int i=0;i<problem.getPoints().size();i++){
 			if(paper.getPoints().contains(problem.getPoints().get(i))){
 				return true;

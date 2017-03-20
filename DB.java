@@ -2,22 +2,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 /**
- * 试题库
+ * 使用随机数模拟试题库
  *
  */
 public class DB {
 	
     //试题库
-    private List<Problem> problemDB;
+    private List<Question> problemDB;
     
     public DB(){
-        problemDB=new ArrayList<Problem>();
-        Problem model;
+        problemDB=new ArrayList<Question>();
+        Question model;
         Random rand=new Random();
         List<Integer> points;
         
         for(int i=1;i<=500;i++){
-            model=new Problem();
+            model=new Question();
             model.setId(i);
             //试题试题难度设置，0.0~1.0
             model.setDifficulty((rand.nextInt(71)+30)*0.01);
@@ -73,11 +73,11 @@ public class DB {
         }
     }
  
-    public List<Problem> getProblemDB() {
+    public List<Question> getProblemDB() {
         return problemDB;
     }
  
-    public void setProblemDB(List<Problem> problemDB) {
+    public void setProblemDB(List<Question> problemDB) {
         this.problemDB = problemDB;
     }
 }

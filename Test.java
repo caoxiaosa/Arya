@@ -31,7 +31,7 @@ public class Test {
 		//设置迭代次数
 		int runCount=100;
 		//产生初始群体
-		List<Unit> unitList=MainFunction.CSZQ(10, paper, db.getProblemDB());
+		List<Population> unitList=MainFunction.CSZQ(10, paper, db.getProblemDB());
 		System.out.println("------------遗传算法组卷系统--------------");
 		System.out.println("初始种群:");
 		showUnit(unitList.get(count));
@@ -61,7 +61,7 @@ public class Test {
 	 * @param endcondition
 	 * @return
 	 */
-	public static boolean isEnd(List<Unit> unitList,double endcondition){
+	public static boolean isEnd(List<Population> unitList,double endcondition){
 		if(unitList.size()>0){
 			for(int i=0;i<unitList.size();i++){
 				if(unitList.get(i).getAdaptationDegree()>=endcondition){
@@ -76,9 +76,9 @@ public class Test {
 	 * @param unitList
 	 * @param expand
 	 */
-	public static void showResult(List<Unit> unitList,double expand){
-		Collections.sort(unitList,new Unit());
-		for(Unit unit:unitList){
+	public static void showResult(List<Population> unitList,double expand){
+		Collections.sort(unitList,new Population());
+		for(Population unit:unitList){
 			if(unit.getAdaptationDegree()>=expand){
 				System.out.println("第"+unit.getId()+"套");
 				System.out.println("题目数量                                   知识点分布                                    难度系数                                 适应度");
@@ -90,7 +90,7 @@ public class Test {
 	 * 显示种群个体的题目编号
 	 * 
 	 */
-	public static void showUnit(Unit u){
+	public static void showUnit(Population u){
 		System.out.println("编号                                  知识点分布                                 难度系数");
 		System.out.println(u.getId()+"          "+u.getKpCoverage()+"          "+u.getDifficuty(u.getProblemList()));
 		for(int i=0;i<u.getProblemList().size();i++){
