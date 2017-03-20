@@ -1,5 +1,3 @@
-package paper1_GA;
-
 import java.util.List;
 	/**
 	 * 试卷实体

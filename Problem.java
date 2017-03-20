@@ -1,8 +1,10 @@
-package paper1_GA;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 试题实体
+ *
+ */
 public class Problem {
 	/**
      * 试题题目的id
