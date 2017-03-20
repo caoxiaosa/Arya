@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 /**
- * ÊÔÌâ¿â
+ * è¯•é¢˜åº“
  *
  */
 public class DB {
 	
-    //ÊÔÌâ¿â
+    //è¯•é¢˜åº“
     private List<Problem> problemDB;
     
     public DB(){
@@ -21,37 +21,37 @@ public class DB {
         for(int i=1;i<=500;i++){
             model=new Problem();
             model.setId(i);
-            //ÊÔÌâÊÔÌâÄÑ¶ÈÉèÖÃ£¬0.0~1.0
+            //è¯•é¢˜è¯•é¢˜éš¾åº¦è®¾ç½®ï¼Œ0.0~1.0
             model.setDifficulty((rand.nextInt(71)+30)*0.01);
             
-            //Ñ¡ÔñÌâ1·Ö
+            //é€‰æ‹©é¢˜1åˆ†
             if(i<100){
             	model.setType(1);
                 model.setScore(1);
             }
             
-            //Ìî¿ÕÌâ1·Ö
+            //å¡«ç©ºé¢˜1åˆ†
             if(i>100&&i<200){
                 model.setType(2);
                 model.setScore(1);
             }
             
-            //ÅĞ¶ÏÌâ1·Ö
+            //åˆ¤æ–­é¢˜1åˆ†
             if(i>200&&i<300){
                 model.setType(3);
                 model.setScore(1);
             }
             
-            //¶Á³ÌĞò5·Ö
+            //è¯»ç¨‹åº5åˆ†
             if(i>300&&i<400){
                 model.setType(4);
                 model.setScore(5);
             }
             
-            //Ğ´³ÌĞò10·Ö
+            //å†™ç¨‹åº10åˆ†
             if(i>400&&i<500){
                 model.setType(5);
-                //·ÖÊıÄÑ¶ÈÏµÊı³ËÒÔ10È¡µÃ
+                //åˆ†æ•°éš¾åº¦ç³»æ•°ä¹˜ä»¥10å–å¾—
                 /*double diff=model.getDifficulty();
                 int score;
                 if(diff>0.3){
@@ -65,7 +65,7 @@ public class DB {
             
             points=new ArrayList<Integer>();
             
-            //Ã¿ÖÖÌâĞÍ°üº¬1µ½6¸öÖªÊ¶µã
+            //æ¯ç§é¢˜å‹åŒ…å«1åˆ°6ä¸ªçŸ¥è¯†ç‚¹
             int count=rand.nextInt(6)+1;
             for(int j=0;j<count;j++){
                 points.add(rand.nextInt(99)+1);

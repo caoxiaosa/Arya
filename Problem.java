@@ -5,23 +5,23 @@ import java.util.List;
 
 public class Problem {
 	/**
-     * ÊÔÌâÌâÄ¿µÄid
+     * è¯•é¢˜é¢˜ç›®çš„id
     */
     private int id;
     /**
-     * ÌâÄ¿ÀàĞÍ£º 1-Ñ¡Ôñ  2-Ìî¿Õ 3-ÅĞ¶Ï 4-¶Á³ÌĞò 5-Ğ´³ÌĞò
+     * é¢˜ç›®ç±»å‹ï¼š 1-é€‰æ‹©  2-å¡«ç©º 3-åˆ¤æ–­ 4-è¯»ç¨‹åº 5-å†™ç¨‹åº
     */
     private int type;
     /**
-     * ÄÑ¶ÈÏµÊı 0.0-1.0Ö®¼ä
+     * éš¾åº¦ç³»æ•° 0.0-1.0ä¹‹é—´
     */
     private double difficulty;
     /**
-     * ÊÔÌâµÄ·ÖÊı
+     * è¯•é¢˜çš„åˆ†æ•°
     */
     private int score;
     /**
-     * ÖªÊ¶µã
+     * çŸ¥è¯†ç‚¹
     */
 	private List<Integer> points;
 	

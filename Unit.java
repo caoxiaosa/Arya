@@ -4,36 +4,36 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 /**
- * ÖÖÈº¸öÌåÊµÌåÀà
+ * ç§ç¾¤ä¸ªä½“å®ä½“ç±»
  *
  */
 public class Unit implements Comparator<Unit>{
 	/**
-     * ÊÔ¾íid
+     * è¯•å·id
     */
 	private int id;
 	/**
-     * ÊÔ¾íÊÊÓ¦¶È
+     * è¯•å·é€‚åº”åº¦
     */
 	private double adaptationDegree;
 	/**
-     * ÊÔ¾íÌâÄ¿
+     * è¯•å·é¢˜ç›®
     */
 	private List<Problem> problemList;
 	/**
-     * ÊÔ¾íÖªÊ¶µã·Ö²¼
+     * è¯•å·çŸ¥è¯†ç‚¹åˆ†å¸ƒ
     */
 	private double kpCoverage;
 	/**
-     * ÌâÄ¿¶ÔÓ¦ÌâĞÍµÄÊıÁ¿
+     * é¢˜ç›®å¯¹åº”é¢˜å‹çš„æ•°é‡
     */
 	private int problemCount;
 	/**
-     * ÊÔ¾í×Ü·Ö
+     * è¯•å·æ€»åˆ†
     */
 	private int sumScore;
 	/**
-     * ÊÔ¾íµÄÄÑ¶ÈÏµÊı
+     * è¯•å·çš„éš¾åº¦ç³»æ•°
     */
 	private double difficuty;
 	

@@ -8,49 +8,49 @@ import java.util.Set;
 
 public class MainFunction {
 	/**
-	 * ÖªÊ¶µã·Ö²¼ËùÕ¼µÄÈ¨ÖØ
+	 * çŸ¥è¯†ç‚¹åˆ†å¸ƒæ‰€å çš„æƒé‡
 	 *
 	 */
 	public static final double kpCoverage=0.6;
 	/**
-	 * ÄÑ¶ÈÏµÊıËùÕ¼µÄÈ¨ÖØ
+	 * éš¾åº¦ç³»æ•°æ‰€å çš„æƒé‡
 	 *
 	 */
 	public static final double difficulty=0.4;
 	/**
-	 * ²úÉú³õÊ¼ÖÖÈº
-	 * @param count ¸öÌåÊıÁ¿
-	 * @param paper ÆÚÍûÖÖÈº
-	 * @param problemList Ìâ¿â
+	 * äº§ç”Ÿåˆå§‹ç§ç¾¤
+	 * @param count ä¸ªä½“æ•°é‡
+	 * @param paper æœŸæœ›ç§ç¾¤
+	 * @param problemList é¢˜åº“
 	 * @return
 	 */
 	public static List<Unit> CSZQ(int count,Paper paper,List<Problem> problemList){
 		List<Unit> unitList=new ArrayList<Unit>();
-		//»ñÈ¡¸÷ÖÖÌâĞÍµÄÌâÊı
+		//è·å–å„ç§é¢˜å‹çš„é¢˜æ•°
 		int[] eachTypeCount=paper.getEachTypeCount();
 		Unit unit;
 		Random rand=new Random();
-		//Îª¸÷Ì×ÊÔ¾í¼ÓÈëÊÔÌâ
+		//ä¸ºå„å¥—è¯•å·åŠ å…¥è¯•é¢˜
 		for(int i=0;i<count;i++){
 			unit=new Unit();
 			unit.setId(i+1);
 			unit.setAdaptationDegree(0.0);
-			//ÊÔ¾í×Ü·ÖÔ¼Êø
+			//è¯•å·æ€»åˆ†çº¦æŸ
 			while(paper.getTotalScore()!=unit.getSumScore()){
 				unit.getProblemList().clear();
 				List<Problem> li=new ArrayList<Problem>();
-				//¸÷ÌâĞÍÌâÄ¿ÊıÁ¿µÄÏŞÖÆ
+				//å„é¢˜å‹é¢˜ç›®æ•°é‡çš„é™åˆ¶
 				for(int j=0;j<eachTypeCount.length;j++){
 					List<Problem> oneTypeProblem=new ArrayList<Problem>();;
 					for(Problem p:problemList){
-						//Ñ¡Ôñ¸ÃÌâĞÍµÄÌâÄ¿ÇÒÊÔÌâĞèÂú×ã×é¾íÒªÇó
+						//é€‰æ‹©è¯¥é¢˜å‹çš„é¢˜ç›®ä¸”è¯•é¢˜éœ€æ»¡è¶³ç»„å·è¦æ±‚
 						if((p.getType()==(j+1))&&isContain(paper,p)){
 							oneTypeProblem.add(p);
 						}
 					}
 						Problem temp=new Problem();
 						
-						//´ÓÊÔÌâ¿âÖĞÑ¡Ôñ²»ÖØ¸´µÄÊÔÌâ
+						//ä»è¯•é¢˜åº“ä¸­é€‰æ‹©ä¸é‡å¤çš„è¯•é¢˜
 						for(int k=0;k<eachTypeCount[j];k++){
 							int index=rand.nextInt(oneTypeProblem.size()-k);
 							unit.getProblemList().add(oneTypeProblem.get(index));
@@ -67,13 +67,13 @@ public class MainFunction {
 			unitList.add(unit);
 		}
 		
-		//¼ÆËãÊÔ¾íµÃÖªÊ¶µã¸²¸ÇÂÊºÍÊÊÓ¦¶ÈÖµ
+		//è®¡ç®—è¯•å·å¾—çŸ¥è¯†ç‚¹è¦†ç›–ç‡å’Œé€‚åº”åº¦å€¼
 		unitList=getKPCoverage(unitList,paper);
 		unitList=getAdaptationDegree(unitList, paper, kpCoverage, difficulty);
 		return unitList;
 	}
 	/**
-	 * ¼ÆËãÖªÊ¶µã¸²¸ÇÂÊ
+	 * è®¡ç®—çŸ¥è¯†ç‚¹è¦†ç›–ç‡
 	 * @param unitList
 	 * @param paper
 	 * @return
@@ -85,7 +85,7 @@ public class MainFunction {
 			for(int j=0;j<unitList.get(i).getProblemList().size();j++){
 				kp.addAll(unitList.get(i).getProblemList().get(j).getPoints());
 			}
-			//ÆÚÍûÊÔ¾íÖªÊ¶µãÓëÕû¸ö¸öÌåÖªÊ¶µãµÄ½»¼¯
+			//æœŸæœ›è¯•å·çŸ¥è¯†ç‚¹ä¸æ•´ä¸ªä¸ªä½“çŸ¥è¯†ç‚¹çš„äº¤é›†
 			Set<Integer> set=new HashSet<Integer>(kp);
 			kp=new ArrayList<Integer>(set);
 			kp.retainAll(paper.getPoints());
@@ -94,7 +94,7 @@ public class MainFunction {
 		return unitList;
  	}
 	/**
-	 * ¼ÆËãÖÖÈºÊÊÓ¦¶È
+	 * è®¡ç®—ç§ç¾¤é€‚åº”åº¦
 	 * @param unitList
 	 * @param paper
 	 * @param kpCoverage
@@ -109,28 +109,28 @@ public class MainFunction {
 		return unitList;
 	}
 	/**
-	 * Ñ¡ÔñËã×Ó
+	 * é€‰æ‹©ç®—å­
 	 * @param unitList
 	 * @param count
 	 * @return
 	 */
 	public static List<Unit> select(List<Unit> unitList,int count){
 		List<Unit> selectUnitList=new ArrayList<Unit>();
-		//ÖÖÈº¸öÌåÊÊÓ¦¶ÈµÄºÍ
+		//ç§ç¾¤ä¸ªä½“é€‚åº”åº¦çš„å’Œ
 		double allAdaptationDegree=0.0;
 		for(int i=0;i<unitList.size();i++){
 			allAdaptationDegree+=unitList.get(i).getAdaptationDegree();
 		}
 			Random rand=new Random();
 			while(selectUnitList.size()!=count){
-				//Éú³É0~1Ö®¼äµÄËæ»úÊı
+				//ç”Ÿæˆ0~1ä¹‹é—´çš„éšæœºæ•°
 				double degree=0.0;
 				double randDegree=(rand.nextInt(99)+1)*0.01*allAdaptationDegree;
-				//Ñ¡Ôñ·ûºÏÒªÇóµÄ¸öÌå
+				//é€‰æ‹©ç¬¦åˆè¦æ±‚çš„ä¸ªä½“
 				for(int j=0;j<unitList.size();j++){
 					degree+=unitList.get(j).getAdaptationDegree();
 					if(degree>=randDegree){
-						//²»ÖØ¸´Ñ¡Ôñ
+						//ä¸é‡å¤é€‰æ‹©
 						if(!selectUnitList.contains(unitList.get(j))){
 							selectUnitList.add(unitList.get(j));
 						}
@@ -142,7 +142,7 @@ public class MainFunction {
 		
 	}
 	/**
-	 * ½»²æËã×Ó
+	 * äº¤å‰ç®—å­
 	 * @param unitList
 	 * @param count
 	 * @param papere
@@ -152,7 +152,7 @@ public class MainFunction {
 		List<Unit> crossedUnitList=new ArrayList<Unit>();
 		Random rand=new Random();
 		while(crossedUnitList.size()!=count){
-			//Ëæ»úÑ¡ÔñÁ½¸ö¸öÌå
+			//éšæœºé€‰æ‹©ä¸¤ä¸ªä¸ªä½“
 			int indexone=rand.nextInt(unitList.size());
 			int indextow=rand.nextInt(unitList.size());
 			Unit unitone;
@@ -160,25 +160,25 @@ public class MainFunction {
 			if(indexone!=indextow){
 				unitone=unitList.get(indexone);
 				unittow=unitList.get(indextow);
-				//Ëæ»úÑ¡ÔñÒ»¸ö½»²æÎ»ÖÃ
+				//éšæœºé€‰æ‹©ä¸€ä¸ªäº¤å‰ä½ç½®
 				int crossPosition=rand.nextInt(51-2);
-				//±£Ö¤½»²æÌâÄ¿µÄÌâĞÍÒÔ¼°·ÖÊıºÍÏàÍ¬
+				//ä¿è¯äº¤å‰é¢˜ç›®çš„é¢˜å‹ä»¥åŠåˆ†æ•°å’Œç›¸åŒ
 				double scoreone=unitone.getProblemList().get(crossPosition).getScore()+unitone.getProblemList().get(crossPosition+1).getScore();
 				double scoretow=unittow.getProblemList().get(crossPosition).getScore()+unittow.getProblemList().get(crossPosition+1).getScore();
 				if(scoreone==scoretow){
-					//Á½¸öĞÂ¸öÌå
+					//ä¸¤ä¸ªæ–°ä¸ªä½“
 					Unit unitNewOne=new Unit();
 					unitNewOne.getProblemList().addAll(unitone.getProblemList());
 					Unit unitNewTow=new Unit();
 					unitNewTow.getProblemList().addAll(unittow.getProblemList());
-					//½»»»½»²æÎ»ÖÃºóµÄÁ½µÀÊÔÌâ
+					//äº¤æ¢äº¤å‰ä½ç½®åçš„ä¸¤é“è¯•é¢˜
 					for(int i=crossPosition;i<crossPosition+2;i++){
 						unitNewOne.getProblemList().add(i,new Problem(unittow.getProblemList().get(i)));
 						unitNewTow.getProblemList().add(i,new Problem(unitone.getProblemList().get(i)));
 					}
 					unitNewOne.setId(crossedUnitList.size());
 					unitNewTow.setId(unitNewOne.getId()+1);
-					//½«Á½¸ö¸öÌåÌí¼Óµ½ĞÂÖÖÈº¼¯ºÏÖĞÈ¥
+					//å°†ä¸¤ä¸ªä¸ªä½“æ·»åŠ åˆ°æ–°ç§ç¾¤é›†åˆä¸­å»
 					if(crossedUnitList.size()<count){
 						crossedUnitList.add(unitNewOne);
 					}if(crossedUnitList.size()<count){
@@ -186,16 +186,16 @@ public class MainFunction {
 					}
 				}
 			}
-		//¹ıÂËÖØ¸´¸öÌå
+		//è¿‡æ»¤é‡å¤ä¸ªä½“
 		//crossedUnitList = crossedUnitList.Distinct(new ProblemComparer()).ToList();
 		}
-		//¼ÆËãÖªÊ¶µã¸²¸ÇÂÊ¼°ÊÊÓ¦¶ÈÖµ
+		//è®¡ç®—çŸ¥è¯†ç‚¹è¦†ç›–ç‡åŠé€‚åº”åº¦å€¼
 		crossedUnitList=getKPCoverage(crossedUnitList, paper);
 		crossedUnitList=getAdaptationDegree(crossedUnitList, paper, kpCoverage, difficulty);
 		return crossedUnitList;
 	}
 	/**
-	 * ±äÒìËã×Ó
+	 * å˜å¼‚ç®—å­
 	 * @param unitList
 	 * @param problemList
 	 * @param paper
@@ -205,37 +205,37 @@ public class MainFunction {
 		Random rand=new Random();
 		int index=0;
 		for(int i=0;i<unitList.size();i++){
-			//Ëæ»úÑ¡ÔñÒ»µÀÌâ
+			//éšæœºé€‰æ‹©ä¸€é“é¢˜
 			index=rand.nextInt(unitList.get(i).getProblemList().size());
 			Problem temp=unitList.get(i).getProblemList().get(index);
 			Problem problem=new Problem();
-			//µÃµ½ÕâµÀÌâµÄÖªÊ¶µã
+			//å¾—åˆ°è¿™é“é¢˜çš„çŸ¥è¯†ç‚¹
 			for(int j=0;j<temp.getPoints().size();j++){
 				if(paper.getPoints().contains(temp.getPoints().get(j))){
 					problem.getPoints().add(temp.getPoints().get(j));
 				}
 			}
-			//´ÓÊı¾İ¿âÖĞÑ¡Ôñ°üº¬´ËÌâÖªÊ¶µãµÄÍ¬ÖÖÀàĞÍ¡¢Í¬·ÖÊı¡¢²»Í¬ÌâºÅµÄÊÔÌâ
+			//ä»æ•°æ®åº“ä¸­é€‰æ‹©åŒ…å«æ­¤é¢˜çŸ¥è¯†ç‚¹çš„åŒç§ç±»å‹ã€åŒåˆ†æ•°ã€ä¸åŒé¢˜å·çš„è¯•é¢˜
 			List<Problem> smallDB=new ArrayList<Problem>();
 			for(Problem p:problemList){
 				if(isContain(paper,problem)&&(p.getScore()==temp.getScore())&&(p.getType()==temp.getType())&&(p.getId()!=temp.getId())){
 					smallDB.add(p);
 				}
 			}
-			//´Ó·ûºÏÒªÇóµÄÊÔÌâÖĞËæ»úÑ¡ÔñÒ»¸ö
+			//ä»ç¬¦åˆè¦æ±‚çš„è¯•é¢˜ä¸­éšæœºé€‰æ‹©ä¸€ä¸ª
 			if(smallDB.size()>0){
 				int indexo=rand.nextInt(smallDB.size());
 				System.out.println(smallDB.size());
 				unitList.get(i).getProblemList().set(index, smallDB.get(indexo));
 			}
 		}
-		//¼ÆËãÖªÊ¶µã¸²¸ÇÂÊºÍÊÊÓ¦¶È
+		//è®¡ç®—çŸ¥è¯†ç‚¹è¦†ç›–ç‡å’Œé€‚åº”åº¦
 		unitList=getKPCoverage(unitList, paper);
 		unitList=getAdaptationDegree(unitList, paper, kpCoverage, difficulty);
 		return unitList;
 	}
 	/**
-	 * ÌâÄ¿ÖªÊ¶µãÊÇ·ñ·ûºÏÊÔ¾íÒªÇó
+	 * é¢˜ç›®çŸ¥è¯†ç‚¹æ˜¯å¦ç¬¦åˆè¯•å·è¦æ±‚
 	 * @param paper
 	 * @param problem
 	 * @return 
