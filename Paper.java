@@ -1,3 +1,10 @@
+package stark;
+
+import java.util.List;
+	/**
+	 * 试卷实体
+	 *
+	 */
 import java.util.List;
 	/**
 	 * 试卷实体
@@ -16,6 +23,22 @@ public class Paper {
      * 试卷总分
     */
 	private int totalScore;
+	
+	/**
+     * 试卷区分度
+    */
+	private double distinguish;
+	
+	/**
+     * 试卷曝光率
+    */
+	private double exposure;
+	
+	/**
+     * 试卷认知层次
+    */
+	private double cognitive;
+	
 	/**
      * 试卷包含知识点
     */
@@ -39,6 +62,30 @@ public class Paper {
 	
 	public void setDifficulty(double difficulty) {
 		this.difficulty = difficulty;
+	}
+	
+	public void setExposure(double exposure) {
+		this.exposure = exposure;
+	}
+	
+	public double getExposure() {
+		return exposure;
+	}
+	
+	public double getCognitive() {
+		return cognitive;
+	}
+	
+	public void setCognitive(double cognitive) {
+		this.cognitive = cognitive;
+	}
+	
+	public double getDistinguish() {
+		return distinguish;
+	}
+	
+	public void setDistinguish(double distinguish) {
+		this.distinguish = distinguish;
 	}
 	
 	public int getTotalScore() {

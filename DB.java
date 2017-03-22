@@ -1,3 +1,4 @@
+package stark;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,7 +8,6 @@ import java.util.Random;
  */
 public class DB {
 	
-    //试题库
     private List<Question> problemDB;
     
     public DB(){
@@ -16,38 +16,41 @@ public class DB {
         Random rand=new Random();
         List<Integer> points;
         
-        for(int i=1;i<=500;i++){
+        for(int i=1;i<=5000;i++){
             model=new Question();
             model.setId(i);
             //试题试题难度设置，0.0~1.0
             model.setDifficulty((rand.nextInt(71)+30)*0.01);
+            model.setDistinguish((rand.nextInt(71)+30)*0.01);
+            model.setExposure((rand.nextInt(5)));
+            model.setCognitive((rand.nextInt(71)+30)*0.01);
             
             //选择题1分
-            if(i<100){
+            if(i<1001){
             	model.setType(1);
                 model.setScore(1);
             }
             
             //填空题1分
-            if(i>100&&i<200){
+            if(i>1000&&i<2001){
                 model.setType(2);
                 model.setScore(1);
             }
             
             //判断题1分
-            if(i>200&&i<300){
+            if(i>2000&&i<3001){
                 model.setType(3);
                 model.setScore(1);
             }
             
             //读程序5分
-            if(i>300&&i<400){
+            if(i>3000&&i<4001){
                 model.setType(4);
                 model.setScore(5);
             }
             
             //写程序10分
-            if(i>400&&i<500){
+            if(i>4000&&i<5001){
                 model.setType(5);
                 //分数难度系数乘以10取得
                 /*double diff=model.getDifficulty();
@@ -64,7 +67,8 @@ public class DB {
             points=new ArrayList<Integer>();
             
             //每种题型包含1到6个知识点
-            int count=rand.nextInt(6)+1;
+            int count=rand.nextInt(7)+1;
+            
             for(int j=0;j<count;j++){
                 points.add(rand.nextInt(99)+1);
             }

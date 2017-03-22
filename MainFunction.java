@@ -1,3 +1,5 @@
+package stark;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -5,16 +7,37 @@ import java.util.Random;
 import java.util.Set;
 
 public class MainFunction {
+	
 	/**
 	 * 知识点分布所占的权重
 	 *
 	 */
-	public static final double kpCoverage=0.6;
+	public static final double kpCoverage=0.35;
+	
 	/**
 	 * 难度系数所占的权重
 	 *
 	 */
-	public static final double difficulty=0.4;
+	public static final double difficulty=0.25;
+	
+	/**
+	 * 认知层次所占的权重
+	 *
+	 */
+	public static final double cognitive=0.15;
+	
+	/**
+	 * 区分度所占的权重
+	 *
+	 */
+	public static final double distinguish=0.15;
+	
+	/**
+	 * 曝光率所占的权重
+	 *
+	 */
+	public static final double exposure=0.1;
+	
 	/**
 	 * 产生初始种群
 	 * @param count 个体数量
@@ -22,145 +45,159 @@ public class MainFunction {
 	 * @param problemList 题库
 	 * @return
 	 */
-	public static List<Population> CSZQ(int count,Paper paper,List<Question> problemList){
-		List<Population> unitList=new ArrayList<Population>();
+	public static List<Population> Init_population(int count,Paper paper,List<Question> problemList){
+		List<Population> populationList=new ArrayList<Population>();
+		
 		//获取各种题型的题数
 		int[] eachTypeCount=paper.getEachTypeCount();
-		Population unit;
+		Question problem=null;
+		Population population=null;
 		Random rand=new Random();
+		
 		//为各套试卷加入试题
 		for(int i=0;i<count;i++){
-			unit=new Population();
-			unit.setId(i+1);
-			unit.setAdaptationDegree(0.0);
+			population=new Population();
+			population.setId(i+1);
+			population.setAdaptationDegree(0.0);
+			
 			//试卷总分约束
-			while(paper.getTotalScore()!=unit.getSumScore()){
-				unit.getProblemList().clear();
+			while(paper.getTotalScore()!=population.getSumScore()){
+				population.getProblemList().clear();
 				List<Question> li=new ArrayList<Question>();
+				
 				//各题型题目数量的限制
 				for(int j=0;j<eachTypeCount.length;j++){
-					List<Question> oneTypeProblem=new ArrayList<Question>();;
+					List<Question> oneTypeProblem=new ArrayList<Question>();
 					for(Question p:problemList){
 						//选择该题型的题目且试题需满足组卷要求
 						if((p.getType()==(j+1))&&isContain(paper,p)){
 							oneTypeProblem.add(p);
 						}
 					}
-					Question temp = new Question();
+						Question temp=new Question();
 						
 						//从试题库中选择不重复的试题
 						for(int k=0;k<eachTypeCount[j];k++){
 							int index=rand.nextInt(oneTypeProblem.size()-k);
-							unit.getProblemList().add(oneTypeProblem.get(index));
+							population.getProblemList().add(oneTypeProblem.get(index));
 							li.add(oneTypeProblem.get(index));
-							unit.setSumScore(oneTypeProblem.get(index).getScore());
+							population.setSumScore(oneTypeProblem.get(index).getScore());
 							temp=oneTypeProblem.get(oneTypeProblem.size()-1-k);
 							oneTypeProblem.set(oneTypeProblem.size()-1-k,oneTypeProblem.get(index));
 							oneTypeProblem.set(index, temp);	
 						}
-						unit.setDifficuty(li);
-						unit.setProblemCount(li.size());
+						
+						population.setDifficuty(li);
+						population.setDistinguish(li);
+						population.setExposure(li);
+						population.setCognitive(li);
+						population.setProblemCount(li.size());
+						
 				}
 			}
-			unitList.add(unit);
+			populationList.add(population);
 		}
 		
-		//计算试卷得知识点覆盖率和适应度值
-		unitList=getKPCoverage(unitList,paper);
-		unitList=getAdaptationDegree(unitList, paper, kpCoverage, difficulty);
-		return unitList;
+		//计算试卷的知识点覆盖率和适应度值
+		populationList=getKPCoverage(populationList,paper);
+		populationList=getAdaptationDegree(populationList, paper, kpCoverage, difficulty,cognitive,distinguish,exposure);
+		return populationList;
 	}
+	
 	/**
 	 * 计算知识点覆盖率
-	 * @param unitList
+	 * @param populationList
 	 * @param paper
 	 * @return
 	 */
-	public static List<Population> getKPCoverage(List<Population> unitList,Paper paper){
+	public static List<Population> getKPCoverage(List<Population> populationList,Paper paper){
 		List<Integer> kp;
-		for(int i=0;i<unitList.size();i++){
+		for(int i=0;i<populationList.size();i++){
 			kp=new ArrayList<Integer>();
-			for(int j=0;j<unitList.get(i).getProblemList().size();j++){
-				kp.addAll(unitList.get(i).getProblemList().get(j).getPoints());
+			for(int j=0;j<populationList.get(i).getProblemList().size();j++){
+				kp.addAll(populationList.get(i).getProblemList().get(j).getPoints());
 			}
 			//期望试卷知识点与整个个体知识点的交集
 			Set<Integer> set=new HashSet<Integer>(kp);
 			kp=new ArrayList<Integer>(set);
 			kp.retainAll(paper.getPoints());
-			unitList.get(i).setKpCoverage(kp.size()*1.00/paper.getPoints().size());
+			populationList.get(i).setKpCoverage(kp.size()*1.00/paper.getPoints().size());
 		}
-		return unitList;
+		return populationList;
  	}
 	/**
 	 * 计算种群适应度
-	 * @param unitList
+	 * @param populationList
 	 * @param paper
 	 * @param kpCoverage
 	 * @param difficulty
 	 * @return
 	 */
-	public static List<Population> getAdaptationDegree(List<Population> unitList,
-													   Paper paper,double kpCoverage,double difficulty){
-		unitList=getKPCoverage(unitList, paper);
-		for(int i=0;i<unitList.size();i++){
-			unitList.get(i)
-					.setAdaptationDegree(1 - (1 - unitList.get(i).getKpCoverage()) * kpCoverage
-							- Math.abs(unitList.get(i).getDifficuty() - paper.getDifficulty()) * difficulty);
+	//此处需要经过进一步的修改    ！！！！！
+	public static List<Population> getAdaptationDegree(List<Population> populationList,Paper paper,double kpCoverage,double difficulty,double cognitive,double distinguish,double exposure){
+		populationList=getKPCoverage(populationList, paper);
+		for(int i=0;i<populationList.size();i++){
+			populationList.get(i).setAdaptationDegree(1-(1-populationList.get(i).getKpCoverage())*kpCoverage-
+					Math.abs(populationList.get(i).getDifficuty()-paper.getDifficulty())*difficulty-
+				    Math.abs(populationList.get(i).getDistinguish()-paper.getDistinguish())*distinguish-
+				    Math.abs(populationList.get(i).getExposure()-paper.getExposure())*exposure
+					-Math.abs(populationList.get(i).getCognitive()-paper.getCognitive())*cognitive
+					);
 		}
-		return unitList;
+		return populationList;
 	}
 	/**
 	 * 选择算子
-	 * @param unitList
+	 * @param populationList
 	 * @param count
 	 * @return
 	 */
-	public static List<Population> select(List<Population> unitList,int count){
-		List<Population> selectUnitList=new ArrayList<Population>();
+	public static List<Population> select(List<Population> populationList,int count){
+		List<Population> selectPopulationList=new ArrayList<Population>();
 		//种群个体适应度的和
 		double allAdaptationDegree=0.0;
-		for(int i=0;i<unitList.size();i++){
-			allAdaptationDegree+=unitList.get(i).getAdaptationDegree();
+		for(int i=0;i<populationList.size();i++){
+			allAdaptationDegree+=populationList.get(i).getAdaptationDegree();
 		}
 			Random rand=new Random();
-			while(selectUnitList.size()!=count){
+			while(selectPopulationList.size()!=count){
 				//生成0~1之间的随机数
 				double degree=0.0;
 				double randDegree=(rand.nextInt(99)+1)*0.01*allAdaptationDegree;
 				//选择符合要求的个体
-				for(int j=0;j<unitList.size();j++){
-					degree+=unitList.get(j).getAdaptationDegree();
+				for(int j=0;j<populationList.size();j++){
+					degree+=populationList.get(j).getAdaptationDegree();
 					if(degree>=randDegree){
 						//不重复选择
-						if(!selectUnitList.contains(unitList.get(j))){
-							selectUnitList.add(unitList.get(j));
+						if(!selectPopulationList.contains(populationList.get(j))){
+							selectPopulationList.add(populationList.get(j));
 						}
 						break;
 					}
 				}
 			}
-			return selectUnitList;
+			return selectPopulationList;
 		
 	}
 	/**
 	 * 交叉算子
-	 * @param unitList
+	 * @param populationList
 	 * @param count
 	 * @param papere
 	 * @return
 	 */
-	public static List<Population> cross(List<Population> unitList,int count,Paper paper){
-		List<Population> crossedUnitList=new ArrayList<Population>();
+	public static List<Population> cross(List<Population> populationList,int count,Paper paper){
+		List<Population> crossedPopulationList=new ArrayList<Population>();
 		Random rand=new Random();
-		while(crossedUnitList.size()!=count){
+		while(crossedPopulationList.size()!=count){
 			//随机选择两个个体
-			int indexone=rand.nextInt(unitList.size());
-			int indextow=rand.nextInt(unitList.size());
+			int indexone=rand.nextInt(populationList.size());
+			int indextow=rand.nextInt(populationList.size());
 			Population unitone;
 			Population unittow;
 			if(indexone!=indextow){
-				unitone=unitList.get(indexone);
-				unittow=unitList.get(indextow);
+				unitone=populationList.get(indexone);
+				unittow=populationList.get(indextow);
 				//随机选择一个交叉位置
 				int crossPosition=rand.nextInt(51-2);
 				//保证交叉题目的题型以及分数和相同
@@ -177,13 +214,13 @@ public class MainFunction {
 						unitNewOne.getProblemList().add(i,new Question(unittow.getProblemList().get(i)));
 						unitNewTow.getProblemList().add(i,new Question(unitone.getProblemList().get(i)));
 					}
-					unitNewOne.setId(crossedUnitList.size());
+					unitNewOne.setId(crossedPopulationList.size());
 					unitNewTow.setId(unitNewOne.getId()+1);
 					//将两个个体添加到新种群集合中去
-					if(crossedUnitList.size()<count){
-						crossedUnitList.add(unitNewOne);
-					}if(crossedUnitList.size()<count){
-						crossedUnitList.add(unitNewTow);
+					if(crossedPopulationList.size()<count){
+						crossedPopulationList.add(unitNewOne);
+					}if(crossedPopulationList.size()<count){
+						crossedPopulationList.add(unitNewTow);
 					}
 				}
 			}
@@ -191,24 +228,24 @@ public class MainFunction {
 		//crossedUnitList = crossedUnitList.Distinct(new ProblemComparer()).ToList();
 		}
 		//计算知识点覆盖率及适应度值
-		crossedUnitList=getKPCoverage(crossedUnitList, paper);
-		crossedUnitList=getAdaptationDegree(crossedUnitList, paper, kpCoverage, difficulty);
-		return crossedUnitList;
+		crossedPopulationList=getKPCoverage(crossedPopulationList, paper);
+		crossedPopulationList=getAdaptationDegree(crossedPopulationList, paper, kpCoverage, difficulty, cognitive, distinguish, exposure);
+		return crossedPopulationList;
 	}
 	/**
 	 * 变异算子
-	 * @param unitList
+	 * @param populationList
 	 * @param problemList
 	 * @param paper
 	 * @return
 	 */
-	public static List<Population> change(List<Population> unitList,List<Question> problemList,Paper paper){
+	public static List<Population> change(List<Population> populationList,List<Question> problemList,Paper paper){
 		Random rand=new Random();
 		int index=0;
-		for(int i=0;i<unitList.size();i++){
+		for(int i=0;i<populationList.size();i++){
 			//随机选择一道题
-			index=rand.nextInt(unitList.get(i).getProblemList().size());
-			Question temp=unitList.get(i).getProblemList().get(index);
+			index=rand.nextInt(populationList.get(i).getProblemList().size());
+			Question temp=populationList.get(i).getProblemList().get(index);
 			Question problem=new Question();
 			//得到这道题的知识点
 			for(int j=0;j<temp.getPoints().size();j++){
@@ -227,13 +264,13 @@ public class MainFunction {
 			if(smallDB.size()>0){
 				int indexo=rand.nextInt(smallDB.size());
 				System.out.println(smallDB.size());
-				unitList.get(i).getProblemList().set(index, smallDB.get(indexo));
+				populationList.get(i).getProblemList().set(index, smallDB.get(indexo));
 			}
 		}
 		//计算知识点覆盖率和适应度
-		unitList=getKPCoverage(unitList, paper);
-		unitList=getAdaptationDegree(unitList, paper, kpCoverage, difficulty);
-		return unitList;
+		populationList=getKPCoverage(populationList, paper);
+		populationList=getAdaptationDegree(populationList, paper, kpCoverage, difficulty, cognitive, distinguish, exposure);
+		return populationList;
 	}
 	/**
 	 * 题目知识点是否符合试卷要求
