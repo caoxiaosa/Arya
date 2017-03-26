@@ -12,7 +12,7 @@ public class Question {
     */
     private int id;
     /**
-     * 试题类型： 1-选择  2-填空 3-判断 4-读程序 5-写程序
+     * 试题类型： 1-选择    2-填空    3-判断    4-读程序    5-写程序
     */
     private int type;
     /**

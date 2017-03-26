@@ -5,11 +5,6 @@ import java.util.List;
 	 * 试卷实体
 	 *
 	 */
-import java.util.List;
-	/**
-	 * 试卷实体
-	 *
-	 */
 public class Paper {
 	/**
      * 试卷id
@@ -35,12 +30,12 @@ public class Paper {
 	private double exposure;
 	
 	/**
-     * 试卷认知层次
+     * 试卷认知层次比例
     */
 	private double cognitive;
 	
 	/**
-     * 试卷包含知识点
+     * 试卷所包含知识点
     */
 	private List<Integer> points;
 	/**

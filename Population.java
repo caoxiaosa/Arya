@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 /**
- * 试卷群体中试卷个体实体类
+ * 试卷群体
  *
  */
 public class Population implements Comparator<Population>{
@@ -20,7 +20,7 @@ public class Population implements Comparator<Population>{
 	/**
      * 试卷个体中试题
     */
-	private List<Question> problemList;
+	private List<Question> questionList;
 	/**
      * 试卷个体知识点分布
     */
@@ -28,7 +28,7 @@ public class Population implements Comparator<Population>{
 	/**
      * 对应题型试题的数量
     */
-	private int problemCount;
+	private int questionCount;
 	/**
      * 试卷个体总分
     */
@@ -57,7 +57,7 @@ public class Population implements Comparator<Population>{
 		id=0;
 		adaptationDegree=0.0;
 		kpCoverage=0.0;
-		problemList=new ArrayList<Question>();
+		questionList=new ArrayList<Question>();
 	}
 	
 	public int getId() {
@@ -76,12 +76,12 @@ public class Population implements Comparator<Population>{
 		this.adaptationDegree = adaptationDegree;
 	}
 	
-	public List<Question> getProblemList() {
-		return problemList;
+	public List<Question> getQuestionList() {
+		return questionList;
 	}
 	
-	public void setProblemList(List<Question> problemList) {
-		this.problemList = problemList;
+	public void setQuestionList(List<Question> questionList) {
+		this.questionList = questionList;
 	}
 	
 	public double getKpCoverage() {
@@ -92,22 +92,22 @@ public class Population implements Comparator<Population>{
 		this.kpCoverage = kpCoverage;
 	}
 	
-	public int getProblemCount(List<Question> problemList) {
-		return problemList.size();
+	public int getQuestionCount(List<Question> questionList) {
+		return questionList.size();
 	}
 	
-	public int getProblemCount() {
-		return problemCount;
+	public int getQuestionCount() {
+		return questionCount;
 	}
 	
-	public void setProblemCount(int problemCount) {
-		this.problemCount = problemCount;
+	public void setQuestionCount(int questionCount) {
+		this.questionCount = questionCount;
 	}
 	
-	public int getSumScore(List<Question> problemList) {
+	public int getSumScore(List<Question> questionList) {
 		int sum=0;
-		for(int i=0;i<problemList.size();i++){
-			sum+=problemList.get(i).getScore();
+		for(int i=0;i<questionList.size();i++){
+			sum+=questionList.get(i).getScore();
 		}
 		return sum;
 	}
@@ -120,10 +120,10 @@ public class Population implements Comparator<Population>{
 		this.sumScore += sumScore;
 	}
 	
-	public double getDifficuty(List<Question> problemList) {
+	public double getDifficuty(List<Question> questionList) {
 		double diff=0.0;
-		for(int i=0;i<problemList.size();i++){
-			diff+=problemList.get(i).getDifficulty()*problemList.get(i).getScore();
+		for(int i=0;i<questionList.size();i++){
+			diff+=questionList.get(i).getDifficulty()*questionList.get(i).getScore();
 		}
 		return diff/sumScore;
 	}
@@ -132,19 +132,19 @@ public class Population implements Comparator<Population>{
 		return difficuty;
 	}
 	
-	public void setDifficuty(List<Question> problemList) {
+	public void setDifficuty(List<Question> questionList) {
 		double diff=0.0;
-		for(int i=0;i<problemList.size();i++){
-			diff+=problemList.get(i).getDifficulty()*problemList.get(i).getScore();
+		for(int i=0;i<questionList.size();i++){
+			diff+=questionList.get(i).getDifficulty()*questionList.get(i).getScore();
 		}
 		this.difficuty=diff/sumScore;
 	}
 	
 	
-	public double getDistinguish(List<Question> problemList) {
+	public double getDistinguish(List<Question> questionList) {
 		double dist=0.0;
-		for(int i=0;i<problemList.size();i++){
-			dist+=problemList.get(i).getDistinguish()*problemList.get(i).getScore();
+		for(int i=0;i<questionList.size();i++){
+			dist+=questionList.get(i).getDistinguish()*questionList.get(i).getScore();
 		}
 		return dist/sumScore;
 	}
@@ -153,40 +153,40 @@ public class Population implements Comparator<Population>{
 		return distinguish;
 	}
 	
-	public void setDistinguish(List<Question> problemList) {
+	public void setDistinguish(List<Question> questionList) {
 		double dist=0.0;
-		for(int i=0;i<problemList.size();i++){
-			dist+=problemList.get(i).getDistinguish()*problemList.get(i).getScore();
+		for(int i=0;i<questionList.size();i++){
+			dist+=questionList.get(i).getDistinguish()*questionList.get(i).getScore();
 		}
 		this.distinguish=dist/sumScore;
 	}
 	
 	
-	public double getExposure(List<Question> problemList) {
-		int expo=0;
-		for(int i=0;i<problemList.size();i++){
-			expo+=problemList.get(i).getExposure();
+	public double getExposure(List<Question> questionList) {
+		double expo=0;
+		for(int i=0;i<questionList.size();i++){
+			expo+=questionList.get(i).getExposure();
 		}
-		return expo/problemList.size();
+		return expo/questionList.size();
 	}
 
 	public double getExposure() {
 		return exposure;
 	}
 	
-	public void setExposure(List<Question> problemList) {
-		int expo=0;
-		for(int i=0;i<problemList.size();i++){
-			expo+=problemList.get(i).getExposure();
+	public void setExposure(List<Question> questionList) {
+		double expo=0;
+		for(int i=0;i<questionList.size();i++){
+			expo+=questionList.get(i).getExposure();
 		}
-		this.exposure=expo/problemList.size();
+		this.exposure=expo/questionList.size();
 	}
 	
 	
-	public double getCognitive(List<Question> problemList) {
+	public double getCognitive(List<Question> questionList) {
 		double cogn=0.0;
-		for(int i=0;i<problemList.size();i++){
-			cogn+=problemList.get(i).getCognitive()*problemList.get(i).getScore();
+		for(int i=0;i<questionList.size();i++){
+			cogn+=questionList.get(i).getCognitive()*questionList.get(i).getScore();
 		}
 		return cogn/sumScore;
 	}
@@ -195,10 +195,10 @@ public class Population implements Comparator<Population>{
 		return cognitive;
 	}
 	
-	public void setCognitive(List<Question> problemList) {
+	public void setCognitive(List<Question> questionList) {
 		double cogn=0.0;
-		for(int i=0;i<problemList.size();i++){
-			cogn+=problemList.get(i).getCognitive()*problemList.get(i).getScore();
+		for(int i=0;i<questionList.size();i++){
+			cogn+=questionList.get(i).getCognitive()*questionList.get(i).getScore();
 		}
 		this.cognitive=cogn/sumScore;
 	}
