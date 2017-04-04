@@ -9,30 +9,37 @@ import java.util.List;
  *
  */
 public class Population implements Comparator<Population>{
+	
 	/**
      * 试卷个体id
     */
 	private int id;
+	
 	/**
      * 试卷个体适应度值
     */
 	private double adaptationDegree;
+	
 	/**
      * 试卷个体中试题
     */
 	private List<Question> questionList;
+	
 	/**
      * 试卷个体知识点分布
     */
 	private double kpCoverage;
+	
 	/**
-     * 对应题型试题的数量
+     * 试题总数量
     */
 	private int questionCount;
+	
 	/**
      * 试卷个体总分
     */
 	private int sumScore;
+	
 	/**
      * 试卷个体的难度系数
     */
@@ -202,7 +209,6 @@ public class Population implements Comparator<Population>{
 		}
 		this.cognitive=cogn/sumScore;
 	}
-	
 	
 	public int compare(Population o1, Population o2) {
 		if(o1.getId()<o2.getId()){

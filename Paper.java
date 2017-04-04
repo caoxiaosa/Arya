@@ -35,13 +35,20 @@ public class Paper {
 	private double cognitive;
 	
 	/**
-     * 试卷所包含知识点
+     * 试卷各个题型所包含知识点
     */
 	private List<Integer> points;
+	
+	/**
+     * 试卷各个题题型所对应的知识点
+    */
+	private int[][] eachTypePoints;
 	/**
      * 试卷中各种题型的试题数量
     */
 	private int[] eachTypeCount;
+	
+	
 
 	public int getId() {
 		return id;
@@ -106,5 +113,15 @@ public class Paper {
 	public void setEachTypeCount(int[] eachTypeCount) {
 		this.eachTypeCount = eachTypeCount;
 	}
+
+	public void setEachTypePoints(int[][] eachTypePoints) {
+		this.eachTypePoints = eachTypePoints;
+	}
+
+	public int[][] getEachTypePoints() {
+		return eachTypePoints;
+	}
+
+	
 	
 }

@@ -3,9 +3,10 @@ package stark;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-//试题类
+	/**
+	 * 试题实体
+	 *
+	 */
 public class Question {	
 	/**
      * 试题的id
@@ -36,10 +37,22 @@ public class Question {
     */
     private double cognitive;
     /**
-     * 试题所包含的知识点
+     * 试题所包含的次要知识点
     */
-	private List<Integer> points;
-	
+    private List<Integer> points;
+    /**
+     * 试题所包含的主知识点
+    */
+    private int point;
+    
+	public int getPoint() {
+		return point;
+	}
+
+	public void setPoint(int point) {
+		this.point = point;
+	}
+
 	public Question(){
 	    id = 0;
 	    type =0;
@@ -48,6 +61,7 @@ public class Question {
 	    exposure=0;
 	    cognitive=0.0;
 	    distinguish=0.0;
+	    point =0;
 	    points = new ArrayList<Integer>();
 	}
 	
@@ -59,6 +73,7 @@ public class Question {
 	    this.cognitive=p.cognitive;
 	    this.distinguish=p.distinguish;
 	    this.exposure=p.exposure;
+	    this.point = p.point;
 	    this.points = p.points;
 	}
 	
