@@ -15,7 +15,6 @@ public class jon {
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("null")
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		List<Integer> kpCoverage=new ArrayList<Integer>();

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -15,31 +17,25 @@ public class MainFunction {
 	 * 知识点分布所占的权重
 	 *
 	 */
-	public static final double kpCoverage=0.35;
+	public static final double kpCoverage=0.38;
 	
 	/**
 	 * 难度系数所占的权重
 	 *
 	 */
-	public static final double difficulty=0.25;
-	
-	/**
-	 * 认知层次所占的权重
-	 *
-	 */
-	public static final double cognitive=0.25;
+	public static final double difficulty=0.27;
 	
 	/**
 	 * 区分度所占的权重
 	 *
 	 */
-	public static final double distinguish=0.15;
+	public static final double distinguish=0.23;
 	
 	/**
 	 * 曝光率所占的权重
 	 *
 	 */
-	public static final double exposure=0.15;
+	public static final double exposure=0.12;
 	
 	/**
 	 * 产生初始种群
@@ -94,14 +90,13 @@ public class MainFunction {
 					population.setDifficuty(questions);
 					population.setDistinguish(questions);
 					population.setExposure(questions);
-					population.setCognitive(questions);
 					population.setQuestionCount(questions.size());		
 				}
-				populationList.add(population);
 			}
+			populationList.add(population);
 		}
 		populationList=getKPCoverage(populationList,paper);
-		populationList=getAdaptationDegree(populationList, paper, kpCoverage, difficulty,cognitive,distinguish,exposure);
+		populationList=getAdaptationDegree(populationList, paper, kpCoverage, difficulty,distinguish,exposure);
 		return populationList;
 	}
 	
@@ -157,7 +152,7 @@ public class MainFunction {
 	 * @return populationList
 	 */
 	public static List<Population> getAdaptationDegree(List<Population> populationList,Paper paper,double kpCoverage,
-		double difficulty,double cognitive,double distinguish,double exposure){
+		double difficulty,double distinguish,double exposure){
 		double adaptionDegree,f1,f2,f3,f4;
 		populationList=getKPCoverage(populationList, paper);
 		for(int i=0;i<populationList.size();i++){
@@ -184,12 +179,13 @@ public class MainFunction {
 		List<Population> selectPopulationList=new ArrayList<Population>();
 		double k,t;
 		double r=2.1;
+		int num=0;
+		int max_position = 0;
+		double maxAdaptationDegree=populationList.get(0).getAdaptationDegree();
 		while(selectPopulationList.size()!=count){
-			double maxAdaptationDegree=populationList.get(0).getAdaptationDegree();
 			double allAdaptationDegree=0.0;
 			double avgAdaptationDegree=0.0;
-			double max=0;
-			int max_position = 0;
+			double max=-1;
 			//计算最大适应度值
 			for(int i=0;i<populationList.size();i++){
 				t=populationList.get(i).getAdaptationDegree();
@@ -204,28 +200,27 @@ public class MainFunction {
 			avgAdaptationDegree=allAdaptationDegree/populationList.size();
 			//计算k值
 			k=Math.floor(r*Math.exp(avgAdaptationDegree/maxAdaptationDegree));
+			
 			for(int i=0;i<k;i++){
 				int rand_num=rand.nextInt(populationList.size());
-				System.out.println("rand_num--------"+i+"-----"+rand_num+"|--|"+populationList.size());
 				double adp_degree=populationList.get(rand_num).getAdaptationDegree();
 				if(max<adp_degree){
 					max=adp_degree;
 					max_position = rand_num;
 				}
 			}
-			System.out.println("max_position:"+max_position+"/"+populationList.size()+"-----|"+selectPopulationList.size());
 			//不重复试卷个体复制
 			if(!selectPopulationList.contains(populationList.get(max_position))){
 				selectPopulationList.add(populationList.get(max_position));
 			}
 			populationList.remove(max_position);
-//			System.out.println("max_position2-----"+max_position);
+			num +=1;
 		}
 		return selectPopulationList;
 	}
 	
 	/**
-	 * 交叉算子
+	 * 交叉算子,所有个体都有平等交叉机会
 	 * @param populationList
 	 * @param count
 	 * @param paper
@@ -237,12 +232,23 @@ public class MainFunction {
 		double Pc1=0.9,Pc2=0.6;
 		double Pc,t;
 		double maxAdaptationDegree=populationList.get(0).getAdaptationDegree();
+		int[] eachTypeCount=paper.getEachTypeCount();
+		List<String> cross_indexs=new ArrayList<String>();
 		while(crossedPopulationList.size()!=count){
+			double Fc,adapt1,adapt2;
 			double randNum=rand.nextFloat();
 			double allAdaptationDegree=0.0;
 			double avgAdaptationDegree=0.0;
-			double max=-1;
-			int max_position = 0;
+			int popu1=rand.nextInt(populationList.size());
+			int popu2=rand.nextInt(populationList.size());
+			if(cross_indexs.contains(popu1+""+popu2)||cross_indexs.contains(popu2+""+popu1)){
+				continue;
+			}
+			if(popu1==popu2){
+				continue;
+			}
+			cross_indexs.add(popu1+""+popu2);
+			cross_indexs.add(popu2+""+popu1);
 			for(int i=0;i<populationList.size();i++){
 				t=populationList.get(i).getAdaptationDegree();
 				if(maxAdaptationDegree<t){
@@ -253,59 +259,81 @@ public class MainFunction {
 				allAdaptationDegree+=populationList.get(i).getAdaptationDegree();
 			}
 			avgAdaptationDegree=allAdaptationDegree/populationList.size();
-			
-			for(int i=0;i<2&&populationList.size()>0;i++){
-				int pop_position=rand.nextInt(populationList.size());
-				double adp_degree=populationList.get(pop_position).getAdaptationDegree();
-				if(max<adp_degree){
-					max=adp_degree;
-					max_position = pop_position;
-				}
+			Population paper_indiv1=populationList.get(popu1);
+			Population paper_indiv2=populationList.get(popu2);
+			adapt1=paper_indiv1.getAdaptationDegree();
+			adapt2=paper_indiv2.getAdaptationDegree();
+			if(adapt1>=adapt2){
+				Fc=adapt1;
+			}else{
+				Fc=adapt1;
 			}
-			double Fc=populationList.get(max_position).getAdaptationDegree();
 			if(maxAdaptationDegree>avgAdaptationDegree||maxAdaptationDegree==avgAdaptationDegree){
 				Pc=Pc1-(Pc1-Pc2)*(Fc-avgAdaptationDegree)/(maxAdaptationDegree-avgAdaptationDegree);
 			}else{
 				Pc=Pc1;
 			}
-//			populationList.remove(max_position);
 			if(randNum<=Pc){
-				//随机选择两个不同的试卷个体
-				int indexone=rand.nextInt(populationList.size());
-				int indextwo=rand.nextInt(populationList.size());
-				if(indexone!=indextwo){
-					Population paper_indiv1=populationList.get(indexone);
-					Population paper_indiv2=populationList.get(indextwo);
-					int crossPosition=rand.nextInt(30);
-					//两个试卷个体进行交叉
-					double scoreone=paper_indiv1.getQuestionList().get(crossPosition).getScore()+paper_indiv1.getQuestionList().get(crossPosition+1).getScore();
-					double scoretwo=paper_indiv2.getQuestionList().get(crossPosition).getScore()+paper_indiv2.getQuestionList().get(crossPosition+1).getScore();
-					if(scoreone==scoretwo){
-						Population populationNewOne=new Population();
-						Population populationNewTwo=new Population();
-						populationNewOne.getQuestionList().addAll(paper_indiv1.getQuestionList());
-						populationNewTwo.getQuestionList().addAll(paper_indiv2.getQuestionList());
-						//交换交叉位置后的两道试题 
-						for(int j=crossPosition;j<crossPosition+2;j++){
-							populationNewOne.getQuestionList().add(j,new Question(paper_indiv2.getQuestionList().get(j)));
-							populationNewTwo.getQuestionList().add(j,new Question(paper_indiv1.getQuestionList().get(j)));
+				List<Question> questionList1=paper_indiv1.getQuestionList();
+				List<Question> questionList2=paper_indiv2.getQuestionList();
+				List<Question> crossed_list1=paper_indiv1.getQuestionList();
+				List<Question> crossed_list2=paper_indiv2.getQuestionList();
+				Population crossed_paper1 = paper_indiv1;
+				Population crossed_paper2 = paper_indiv2;
+				crossed_paper1.setId(paper_indiv2.getId()+crossedPopulationList.size()+1);
+				for(int j=0;j<eachTypeCount.length;j++){
+					List<String> idList1=new ArrayList<String>();
+					List<String> idList2=new ArrayList<String>();
+					List<Question> type_List1=new ArrayList<Question>();
+					List<Question> type_List2=new ArrayList<Question>();
+					for(Question q:questionList1){
+						if(q.getType()==(j+1)){
+							idList1.add(q.getId()+"");
+							type_List1.add(q);
 						}
-						populationNewOne.setId(crossedPopulationList.size());
-						populationNewTwo.setId(populationNewOne.getId()+1);
-						//将两个个体添加到新种群集合中去
-						if(crossedPopulationList.size()<count){
-							crossedPopulationList.add(populationNewOne);
+					}
+					for(Question q:questionList2){
+						if(q.getType()==(j+1)){
+							idList2.add(q.getId()+"");
+							type_List2.add(q);
 						}
-						if(crossedPopulationList.size()<count){
-							crossedPopulationList.add(populationNewTwo);
+					}
+					boolean is_repeat=false;
+					for(String s:idList1){
+						if(idList2.contains(s)){
+							is_repeat=true;
 						}
-					}			
+					}
+					if(is_repeat){
+						continue;
+					}else{
+						int position=rand.nextInt(eachTypeCount[j]);
+						Question tmp_q1=type_List1.get(position);
+						Question tmp_q2=type_List2.get(position);
+						type_List1.remove(position);
+						type_List2.remove(position);
+						type_List1.add(tmp_q1);
+						type_List2.add(tmp_q2);
+						crossed_list1.addAll(type_List1);
+						crossed_list2.addAll(type_List2);
+					}
+				}
+				crossed_paper1.setQuestionList(crossed_list1);
+				crossed_paper2.setQuestionList(crossed_list2);
+				int crossed_add = crossedPopulationList.size()+1;
+				if(crossedPopulationList.size()<count){
+					crossed_paper1.setId(paper_indiv1.getId()+crossed_add);
+					crossedPopulationList.add(crossed_paper1);
+				}
+				if(crossedPopulationList.size()<count){
+					crossed_paper2.setId(paper_indiv2.getId()+crossed_add);
+					crossedPopulationList.add(crossed_paper2);
 				}
 			}
 		}
 		//计算知识点覆盖率及适应度值
 		crossedPopulationList=getKPCoverage(crossedPopulationList, paper);
-		crossedPopulationList=getAdaptationDegree(crossedPopulationList, paper, kpCoverage, difficulty, cognitive, distinguish, exposure);
+		crossedPopulationList=getAdaptationDegree(crossedPopulationList, paper, kpCoverage, difficulty, distinguish, exposure);
 		return crossedPopulationList;
 	}
 	
@@ -321,12 +349,9 @@ public class MainFunction {
 		List<Question> questionList=new ArrayList<Question>();
 		questionList=db.getProblemDB();
 		int index=0;
-		@SuppressWarnings("unused")
 		double Fm,t,Pm = 0;
 		double Pm1=0.1,Pm2=0.0001;
 		Random rand=new Random();
-		
-		
 		for(int i=0;i<populationList.size();i++){	
 			double randNum=rand.nextFloat();
 			for(int k=0;k<populationList.size();k++){
@@ -371,7 +396,7 @@ public class MainFunction {
 				//从符合要求的试题中随机选择一个
 				if(questionDB.size()>0){
 					int indexo=rand.nextInt(questionDB.size());
-					System.out.println(questionDB.size());
+					System.out.println("i am mu:"+questionDB.size());
 					populationList.get(i).getQuestionList().set(index, questionDB.get(indexo));
 				}
 			}
@@ -379,7 +404,7 @@ public class MainFunction {
 		}
 		//计算知识点覆盖率和适应度
 		populationList=getKPCoverage(populationList, paper);
-		populationList=getAdaptationDegree(populationList, paper, kpCoverage, difficulty, cognitive, distinguish, exposure);
+		populationList=getAdaptationDegree(populationList, paper, kpCoverage, difficulty, distinguish, exposure);
 		return populationList;
 	}
 	
